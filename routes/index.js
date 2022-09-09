@@ -51,6 +51,54 @@ router.post('/poweron', apiKeyMiddleware , async function(req, res, next) {
   }
 });
 
+router.get('/poweron', apiKeyMiddleware, async function(req, res, next) {
+  try {
+    const now = DateTime.now().setZone('America/Guatemala').toLocaleString(DateTime.DATETIME_FULL);
+
+    const bodyConfig = {
+        "to": "ehmoratallar@gmail.com",
+        "subject": "Computer powered on {{date}}",
+        "body": "Computer powered on {{date}}",
+        "bodyHTML": "Computer powered on {{date}}"
+    };
+    let { 
+      to,
+      subject,
+      body,
+      bodyHTML,
+    }  = bodyConfig;
+
+    subject = subject.replace('{{date}}', now);
+    body = body.replace('{{date}}', now);
+    bodyHTML = bodyHTML.replace('{{date}}', now);
+
+    const message = {
+      from: config.email.auth.user,
+      to,
+      subject,
+      text: body,
+      html: bodyHTML,
+    };
+
+    const emailConfig = config.email ?? null;
+
+    const result = await emailUtils.sendEmail(message);
+    if (result.success === false) {
+        throw new Exception(result.error);
+    }
+    
+    return res.json({
+      success: true,
+      now,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error:error.message,
+    });
+  }
+});
+
 router.all('*', function(req, res, next) {
   return res.status(404).json({success: false});
 });
