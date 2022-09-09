@@ -20,9 +20,9 @@ router.post('/poweron', apiKeyMiddleware , async function(req, res, next) {
       bodyHTML,
     }  = req.body;
 
-    subject = subject.replaceAll('{{date}}', now);
-    body = body.replaceAll('{{date}}', now);
-    bodyHTML = bodyHTML.replaceAll('{{date}}', now);
+    subject = subject.replace('{{date}}', now);
+    body = body.replace('{{date}}', now);
+    bodyHTML = bodyHTML.replace('{{date}}', now);
 
     const message = {
       from: config.email.auth.user,
