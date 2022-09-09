@@ -51,7 +51,7 @@ router.post('/poweron', apiKeyMiddleware , async function(req, res, next) {
   }
 });
 
-router.get('*', function(req, res, next) {
+router.all('*', function(req, res, next) {
   return res.status(404).json({success: false});
 });
 
